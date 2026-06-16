@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Studio — Free PDF Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/main.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <span class="logo-mark">P</span>
+        <span class="logo-text">PDF Studio</span>
+      </a>
+      <span class="nav-tagline">Free · Local · Private</span>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="app">
+
+    <!-- HOME VIEW -->
+    <div id="view-home" class="view active">
+      <section class="hero">
+        <p class="hero-eyebrow">No uploads to the cloud. No accounts.</p>
+        <h1 class="hero-title">Every PDF tool<br>you actually need.</h1>
+        <p class="hero-sub">All processing happens on your machine — your files never leave.</p>
+      </section>
+
+      <section class="tools-grid-section">
+        <div class="tools-grid" id="tools-grid">
+          <!-- populated by JS -->
+        </div>
+      </section>
+    </div>
+
+    <!-- TOOL VIEW -->
+    <div id="view-tool" class="view">
+      <div class="tool-container">
+        <button class="back-btn" id="back-btn">← All tools</button>
+        <div id="tool-content">
+          <!-- populated by JS -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+
+  <!-- PROGRESS OVERLAY -->
+  <div id="progress-overlay" class="progress-overlay hidden">
+    <div class="progress-box">
+      <div class="progress-spinner"></div>
+      <p class="progress-label" id="progress-label">Processing…</p>
+    </div>
+  </div>
+
+  <script src="/static/js/tools.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/signature.js"></script>
+  <script src="/static/js/organizer.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
