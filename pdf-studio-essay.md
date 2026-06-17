@@ -40,7 +40,7 @@ It's also fully open source. The entire codebase is public on GitHub, which mean
 
 No Terminal, no developer tools, no Python install. If you can install any normal Mac app, you can install this.
 
-1. **[Download the latest PDF Studio.dmg](https://github.com/quizzito/pdf-studio/releases/latest)** from GitHub
+1. **[Download the latest PDF Studio.dmg](https://github.com/quizzito/pdf-studio/releases/latest/download/PDF-Studio-Mac.dmg)** — this starts the download immediately
 2. **Open the file** and drag **PDF Studio** into your **Applications** folder
 3. **Launch PDF Studio** from Launchpad, exactly like any other app
 
@@ -72,6 +72,6 @@ Because the existing options force a choice between paying a recurring fee or up
 
 ## Get started now
 
-PDF Studio is live, free, and ready to download right now. The fastest way to start is the [GitHub releases page](https://github.com/quizzito/pdf-studio/releases/latest), where the `.dmg` installer is a direct download — no sign-up, no email required.
+PDF Studio is live, free, and ready to download right now. The fastest way to start is this direct link to [PDF Studio.dmg](https://github.com/quizzito/pdf-studio/releases/latest/download/PDF-Studio-Mac.dmg) — no sign-up, no email, no extra click required.
 
 If you want to see exactly how it works under the hood, browse the full source at [github.com/quizzito/pdf-studio](https://github.com/quizzito/pdf-studio). Star the repo if it saves you from another $20/month subscription — it helps other people find a free alternative, too.

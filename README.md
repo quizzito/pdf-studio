@@ -7,7 +7,7 @@
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat)
 ![Platform](https://img.shields.io/badge/Platform-macOS-lightgrey?style=flat&logo=apple)
 
-### [⬇ Download PDF Studio for macOS](../../releases/latest)
+### [⬇ Download PDF Studio for macOS](../../releases/latest/download/PDF-Studio-Mac.dmg)
 
 No account, no install wizard, no command line. Just a `.dmg` you drag into Applications.
 
@@ -43,7 +43,7 @@ PDF Studio runs **entirely on your machine**. No file ever leaves your computer.
 
 **Three steps. No Terminal, no Homebrew, no Python.** Ghostscript and LibreOffice are already bundled inside the app.
 
-1. **[Download the latest `PDF Studio.dmg`](../../releases/latest)**
+1. **[Download the latest `PDF Studio.dmg`](../../releases/latest/download/PDF-Studio-Mac.dmg)**
 2. **Open the `.dmg`** and drag **PDF Studio** into **Applications**
 3. **Launch PDF Studio** from Launchpad, like any other Mac app
 

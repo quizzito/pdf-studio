@@ -85,7 +85,7 @@ regression.
 
 ```bash
 bash packaging/build_dmg.sh
-open "dist/PDF Studio.dmg"
+open "dist/PDF-Studio-Mac.dmg"
 ```
 
 - [ ] The .dmg mounts and shows the app + an Applications shortcut
@@ -94,7 +94,7 @@ open "dist/PDF Studio.dmg"
 
 ## 7. Clean-machine sanity check (recommended, not required)
 
-If you can, copy just `dist/PDF Studio.dmg` to a different Mac (or a fresh
+If you can, copy just `dist/PDF-Studio-Mac.dmg` to a different Mac (or a fresh
 user account on the same Mac) that has never had Homebrew, Ghostscript, or
 LibreOffice installed, and run through step 6 again there. This is the only
 way to be fully sure nothing is silently depending on your build machine's

@@ -9,7 +9,12 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_PATH="$PROJECT_ROOT/dist/PDF Studio.app"
-DMG_PATH="$PROJECT_ROOT/dist/PDF Studio.dmg"
+# No space in the .dmg filename (unlike the .app bundle name above) so GitHub's
+# /releases/latest/download/<filename> shortcut -- which lets the README link
+# straight to the binary instead of the releases page -- works without any
+# %20 escaping. The mounted volume's display name (set below) still reads
+# "PDF Studio" either way, so this has no visible effect for the user.
+DMG_PATH="$PROJECT_ROOT/dist/PDF-Studio-Mac.dmg"
 
 if [ ! -d "$APP_PATH" ]; then
   echo "✗ $APP_PATH not found. Run packaging/build_mac.sh first." >&2
