@@ -8,6 +8,17 @@ tmp/
 *.pptx
 .env
 
+# Exception: these two are committed test fixtures, not generated output --
+# vendor_libreoffice.sh's build-time smoke test (Word/PPT -> PDF) depends on
+# them existing in the repo. The blanket *.docx/*.pptx rules above were
+# silently excluding them from every commit, including the very first one,
+# so GitHub Actions' checkout never had them and every release build failed
+# at "Smoke-testing Word -> PDF... Error: source file could not be loaded."
+# This never showed up in local builds because the files already existed,
+# untracked, on disk.
+!tests/fixtures/sample.docx
+!tests/fixtures/sample.pptx
+
 # Build artifacts -- generated fresh by packaging/build_mac.sh /
 # .github/workflows/release.yml on every build. Never commit these; the
 # vendored LibreOffice.app alone is several hundred MB.
