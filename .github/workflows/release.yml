@@ -1,0 +1,52 @@
+# Builds PDF Studio.app + PDF Studio.dmg on a macOS runner and attaches the
+# .dmg to a GitHub Release whenever a "v*" tag is pushed.
+#
+# This file does nothing until it is committed, pushed, and a matching tag
+# is pushed (e.g. `git tag v1.0.0 && git push origin v1.0.0`) -- none of
+# that has been done as part of this change. Test the build locally first
+# (see TESTING.md) before relying on this workflow.
+name: Release macOS build
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Homebrew dependencies
+        run: |
+          brew install ghostscript
+          brew install --cask libreoffice
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r packaging/requirements-build.txt
+
+      - name: Build PDF Studio.app
+        run: bash packaging/build_mac.sh
+
+      - name: Build PDF Studio.dmg
+        run: bash packaging/build_dmg.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDF-Studio-dmg
+          path: dist/PDF Studio.dmg
+
+      - name: Attach to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/PDF Studio.dmg

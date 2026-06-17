@@ -7,6 +7,10 @@
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat)
 ![Platform](https://img.shields.io/badge/Platform-macOS-lightgrey?style=flat&logo=apple)
 
+### [⬇ Download PDF Studio for macOS](../../releases/latest)
+
+No account, no install wizard, no command line. Just a `.dmg` you drag into Applications.
+
 ---
 
 ## WHY — The problem this solves
@@ -35,9 +39,22 @@ PDF Studio runs **entirely on your machine**. No file ever leaves your computer.
 
 ---
 
-## HOW — Get it running in 3 steps
+## HOW — Get it running
 
-### Prerequisites
+**Three steps. No Terminal, no Homebrew, no Python.** Ghostscript and LibreOffice are already bundled inside the app.
+
+1. **[Download the latest `PDF Studio.dmg`](../../releases/latest)**
+2. **Open the `.dmg`** and drag **PDF Studio** into **Applications**
+3. **Launch PDF Studio** from Launchpad, like any other Mac app
+
+You're done — start using the tools.
+
+> **First launch only:** macOS will say *"PDF Studio can't be opened because it is from an unidentified developer."* That's expected — this app is free and independently built, not signed with a paid Apple Developer ID. To open it: **right-click (or Control-click) the app → Open → Open**. You only have to do this once.
+
+<details>
+<summary><strong>Want to run it from source instead?</strong> (for developers)</summary>
+
+For development, or if you'd rather not run a downloaded binary.
 
 ```bash
 # 1. Ghostscript (for PDF compression)
@@ -52,35 +69,29 @@ brew install --cask libreoffice
 > /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 > ```
 
----
-
-### Install & Run
-
 ```bash
 # Clone the repo
 git clone https://github.com/quizzito/pdf-studio.git
 cd pdf-studio
 
-# Set up virtual environment and install dependencies
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+# One-command setup (creates venv, installs deps)
+bash setup.sh
 
 # Start the app
-python app.py
-```
-
-Open **http://localhost:5000** in your browser. That's it.
-
----
-
-### Every time you come back
-
-```bash
-cd pdf-studio
 source venv/bin/activate
 python app.py
 ```
+
+Open **http://localhost:5000** in your browser.
+
+Or skip the browser tab and get the same native window the packaged app uses:
+
+```bash
+pip install pywebview
+python desktop.py
+```
+
+</details>
 
 ---
 
@@ -90,12 +101,17 @@ python app.py
 
 | Error | Fix |
 |-------|-----|
-| `No module named 'flask'` | You forgot to activate the venv: `source venv/bin/activate` |
-| `gs: command not found` | `brew install ghostscript` |
-| `libreoffice: command not found` | `brew install --cask libreoffice` (Word/PPT features only) |
+| "PDF Studio can't be opened because it is from an unidentified developer" | Right-click the app → Open → Open (one-time confirmation) |
+| `No module named 'flask'` (source install) | You forgot to activate the venv: `source venv/bin/activate` |
+| `gs: command not found` (source install) | `brew install ghostscript` |
+| `libreoffice: command not found` (source install) | `brew install --cask libreoffice` (Word/PPT features only) |
 | HEIC files not converting | `pip install pillow-heif` |
-| Port 5000 already in use | Change port in `app.py`: `app.run(port=5001)` |
-| Large files timing out | Use gunicorn: `gunicorn -w 2 -t 120 "app:create_app()"` |
+| Port 5000 already in use (source install) | Change port in `app.py`: `app.run(port=5001)` |
+| Large files timing out (source install) | Use gunicorn: `gunicorn -w 2 -t 120 "app:create_app()"` |
+
+### Building the app yourself
+
+See [`TESTING.md`](TESTING.md) for the full local build-and-verify checklist (`packaging/build_mac.sh` + `packaging/build_dmg.sh`).
 
 ---
 
@@ -103,7 +119,8 @@ python app.py
 
 ```
 pdf-studio/
-├── app.py                          # Flask entry point
+├── app.py                          # Flask entry point (unchanged — used by source installs)
+├── desktop.py                      # Native desktop entry point (used by the packaged app)
 ├── requirements.txt                # Python dependencies
 │
 ├── backend/
@@ -117,18 +134,27 @@ pdf-studio/
 │   │   ├── convert_service.py      # pdf2docx, LibreOffice, img2pdf
 │   │   └── signature_service.py    # reportlab signature stamping
 │   └── utils/
+│       ├── bin_utils.py            # Resolves gs/soffice: bundled copy first, PATH fallback
 │       └── file_utils.py           # Upload/output path helpers
 │
-└── frontend/
-    ├── templates/index.html        # Single HTML shell
-    └── static/
-        ├── css/main.css            # Full design system
-        └── js/
-            ├── app.js              # Router + all tool UIs
-            ├── api.js              # All fetch() calls to backend
-            ├── tools.js            # Tool definitions
-            ├── signature.js        # Canvas signature pad
-            └── organizer.js        # Drag-to-reorder page organizer
+├── frontend/
+│   ├── templates/index.html        # Single HTML shell
+│   └── static/
+│       ├── css/main.css            # Full design system
+│       └── js/
+│           ├── app.js              # Router + all tool UIs
+│           ├── api.js              # All fetch() calls to backend
+│           ├── tools.js            # Tool definitions
+│           ├── signature.js        # Canvas signature pad
+│           └── organizer.js        # Drag-to-reorder page organizer
+│
+└── packaging/                      # Everything used to build PDF Studio.app / .dmg
+    ├── pdfstudio.spec               # PyInstaller spec
+    ├── vendor_ghostscript.sh        # Bundles a self-contained gs
+    ├── vendor_libreoffice.sh        # Bundles a trimmed, self-contained LibreOffice
+    ├── build_mac.sh                 # Runs the two vendor scripts + PyInstaller
+    ├── build_dmg.sh                 # Wraps the built .app into a .dmg
+    └── dmgbuild_settings.py         # .dmg window/icon layout
 ```
 
 ---
@@ -153,14 +179,16 @@ pdf-studio/
 | Need | Library | Why |
 |------|---------|-----|
 | Web framework | Flask 3 | Lightweight, no build step |
+| Native window | pywebview | Wraps the Flask app in a real desktop window |
 | PDF manipulation | pypdf + pikepdf | Pure Python, fast |
-| Compression | Ghostscript (system) | Industry standard |
+| Compression | Ghostscript (bundled) | Industry standard |
 | PDF → Word | pdf2docx | Best free converter |
-| Word/PPT → PDF | LibreOffice headless | Gold standard |
+| Word/PPT → PDF | LibreOffice headless (bundled, trimmed) | Gold standard |
 | Image → PDF | img2pdf + Pillow | Lossless embedding |
 | HEIC support | pillow-heif | Registers as Pillow plugin |
 | PDF thumbnails | PDF.js (CDN) | Mozilla's own viewer |
 | Fonts | Google Fonts | DM Serif Display + Inter |
+| Packaging | PyInstaller + dmgbuild | Standalone .app and installer .dmg |
 
 ---
 

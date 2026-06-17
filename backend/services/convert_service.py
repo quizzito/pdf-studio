@@ -7,6 +7,16 @@ from pdf2docx import Converter
 from pptx import Presentation
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas as rl_canvas
+from backend.utils.bin_utils import resolve_binary
+
+_SOFFICE_BUNDLED_RELPATH = "LibreOffice.app/Contents/MacOS/soffice"
+
+
+def _soffice_bin() -> str:
+    """libreoffice and soffice are interchangeable CLI entry points; resolve
+    to a bundled copy when running inside the packaged app, else fall back
+    to whatever is on PATH (unchanged source/dev behavior)."""
+    return resolve_binary("libreoffice", _SOFFICE_BUNDLED_RELPATH)
 
 
 # ── PDF → Word ───────────────────────────────────────────────────────────────
@@ -27,7 +37,7 @@ def word_to_pdf(input_path: str, output_path: str) -> None:
     out_dir = str(Path(output_path).parent)
     result = subprocess.run(
         [
-            "libreoffice", "--headless", "--convert-to", "pdf",
+            _soffice_bin(), "--headless", "--convert-to", "pdf",
             "--outdir", out_dir, input_path,
         ],
         capture_output=True, text=True,
@@ -52,7 +62,7 @@ def ppt_to_pdf(input_path: str, output_path: str) -> None:
     out_dir = str(Path(output_path).parent)
     result = subprocess.run(
         [
-            "libreoffice", "--headless", "--convert-to", "pdf",
+            _soffice_bin(), "--headless", "--convert-to", "pdf",
             "--outdir", out_dir, input_path,
         ],
         capture_output=True, text=True,

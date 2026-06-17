@@ -7,3 +7,11 @@ tmp/
 *.docx
 *.pptx
 .env
+
+# Build artifacts -- generated fresh by packaging/build_mac.sh /
+# .github/workflows/release.yml on every build. Never commit these; the
+# vendored LibreOffice.app alone is several hundred MB.
+build/
+dist/
+packaging/vendor/
+*.dmg

@@ -1,0 +1,5 @@
+# Build-time / packaging dependencies. Not needed to just run PDF Studio
+# from source -- only needed on the machine producing the .app / .dmg.
+pywebview>=5.0
+pyinstaller>=6.6
+dmgbuild>=1.6

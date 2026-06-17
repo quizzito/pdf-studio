@@ -2,6 +2,7 @@ import subprocess
 import platform
 import pikepdf
 from pypdf import PdfWriter, PdfReader
+from backend.utils.bin_utils import resolve_binary
 
 
 # ── Compression ─────────────────────────────────────────────────────────────
@@ -22,7 +23,7 @@ def _ghostscript_bin():
             except (FileNotFoundError, subprocess.CalledProcessError):
                 continue
         raise FileNotFoundError("Ghostscript not found. Install via brew install ghostscript")
-    return "gs"
+    return resolve_binary("gs", "bin/gs")
 
 
 def compress_pdf(input_path: str, output_path: str, preset: str = "ebook") -> None:
