@@ -10,7 +10,20 @@
 
 import os
 
-application = defines.get("app", os.path.join(os.path.dirname(__file__), "..", "dist", "PDF Studio.app"))
+# dmgbuild loads this file with exec(compile(source, filename, "exec"), settings, settings)
+# -- it is never imported as a real module, so `__file__` does not exist in this
+# scope. Referencing it used to crash every single run (NameError: name '__file__'
+# is not defined), even though build_dmg.sh always passes -D app=<path> and the
+# fallback value was therefore never actually needed: Python still evaluates a
+# .get(key, default) call's default expression eagerly, before checking whether
+# the key is present, so the broken expression ran unconditionally either way.
+application = defines.get("app")
+if not application:
+    raise SystemExit(
+        "dmgbuild_settings.py requires -D app=<path to PDF Studio.app> -- "
+        "packaging/build_dmg.sh sets this automatically; if you're invoking "
+        "dmgbuild directly, add that flag."
+    )
 appname = "PDF Studio"
 
 format = "UDZO"          # compressed, read-only -- standard for distribution
